@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc64730f49240b34bb0cd4acdf4394be, type: 3}
+  m_Name: 1_Diamond
+  m_EditorClassIdentifier: 
+  Description: Adds 3 power to worriors of the same suit
+  CardImage: {fileID: 21300000, guid: 902b25115fb77be4a8210b381adea0d0, type: 3}
+  ATK: 1
+  SuitIcon: {fileID: -1824988634, guid: 189f548e7459e4e44b534c9283464aa9, type: 3}
+  Suit: 1
