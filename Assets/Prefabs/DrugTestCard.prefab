@@ -324,8 +324,9 @@ GameObject:
   - component: {fileID: 799193871318971492}
   - component: {fileID: 142142628458143219}
   - component: {fileID: 6913345771258586225}
+  - component: {fileID: 7241111608905651539}
   m_Layer: 0
-  m_Name: WorriorCard
+  m_Name: DrugTestCard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -403,6 +404,18 @@ MonoBehaviour:
   graphic: {fileID: 7024536103492989840}
   suit: {fileID: 8433521137523634606}
   descriptionComponment: {fileID: 2514062723669892805}
+--- !u!114 &7241111608905651539
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2776969664153851050}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82f7cd309b499d2489f5bbe58623fea7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2780024822613206619
 GameObject:
   m_ObjectHideFlags: 0

@@ -5,8 +5,9 @@ using DG.Tweening;
 
 public class HoverPreview : MonoBehaviour
 {
-    private void OnMouseDown()
+    private void OnMouseEnter()
     {
-        
+        Debug.Log("Ðü¸¡ÔÚ´Ë¿¨ÉÏ");
     }
+
 }

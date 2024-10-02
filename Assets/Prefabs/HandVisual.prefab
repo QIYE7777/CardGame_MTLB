@@ -200,13 +200,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5ef1038ef57a9943bfc22178b5f6402, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardAsset:
-  - {fileID: 11400000, guid: 527e117073a952f4588c56f00362ad93, type: 2}
-  - {fileID: 11400000, guid: cb5dcc14e23994240912cbfaaacc363e, type: 2}
-  - {fileID: 11400000, guid: cb5dcc14e23994240912cbfaaacc363e, type: 2}
-  - {fileID: 11400000, guid: cb5dcc14e23994240912cbfaaacc363e, type: 2}
-  - {fileID: 11400000, guid: cb5dcc14e23994240912cbfaaacc363e, type: 2}
-  - {fileID: 11400000, guid: cb5dcc14e23994240912cbfaaacc363e, type: 2}
+  cardAsset: []
   warriorCard: {fileID: 2776969664153851050, guid: e85f13cedbc13d94ca27e4ebd35287a7, type: 3}
   Slot: {fileID: 9165408256993976588}
   sameDistanceChildren: {fileID: 534119318171653584}

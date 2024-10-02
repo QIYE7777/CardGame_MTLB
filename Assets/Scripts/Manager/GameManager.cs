@@ -25,7 +25,7 @@ public class GameManager : Singleton<GameManager>
         yield return new WaitForSeconds(0.1f);
         for (int i = 0; i<defaultNumberofCards; i++)
         {
-            DealDefaultCards.Invoke();
+            DealDefaultCards?.Invoke();
             yield return new WaitForSeconds(0.5f);
         }
     }

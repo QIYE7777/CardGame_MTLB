@@ -15,16 +15,14 @@ public class HandVisualManager : MonoBehaviour
     private float slotMoveDistanceX;
     private int cardNumberInHand;
 
-    private void Awake()
-    {
-        DeckManager.Instance.DealingCard += AddCard;
-    }
     private void Start()
     {
         slots = sameDistanceChildren.children;
         slotMoveDistanceX = sameDistanceChildren.dist.x;
         cardNumber = cardAsset.Length;
         cardNumberInHand = 0;
+
+        DeckManager.Instance.DealingCard += AddCard;
 
         /* 发初始手牌的老方法
         if (cardAsset.Length == 0)
