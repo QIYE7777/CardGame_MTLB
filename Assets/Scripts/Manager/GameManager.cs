@@ -10,6 +10,7 @@ public class GameManager : Singleton<GameManager>
 
     [Header("Reference")]
     public DeckManager deckManager;
+    public HandVisualManager handVisualManger;
 
     public event Action DealDefaultCards;
     
