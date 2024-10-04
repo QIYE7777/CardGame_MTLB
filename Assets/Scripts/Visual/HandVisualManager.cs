@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using UnityEngine.EventSystems;
 
 public class HandVisualManager : MonoBehaviour
 {
@@ -13,10 +14,13 @@ public class HandVisualManager : MonoBehaviour
     public CardAsset lastRemoveCardAsset;
 
     private int cardNumber;
-    private Transform[] slots;
+    public Transform[] slots;
     private float slotMoveDistanceX;
     private int cardNumberInHand;
     private int instantiateIndex;
+    bool cardsFromTrade = false;
+    public EventSystem eventSystem;
+    private CardDrugAndReplace NewCardDrugAndReplace;
 
     private void Start()
     {
@@ -26,6 +30,7 @@ public class HandVisualManager : MonoBehaviour
         cardNumberInHand = 0;
 
         DeckManager.Instance.DealingCard += AddCard;
+        TradeInManager.Instance.addCardFromTrade += AddCardFromTrade;
     }
     private void Update()
     {
@@ -33,19 +38,32 @@ public class HandVisualManager : MonoBehaviour
 
         ReplenishGap();
     }
+
+    void MouseClickIgnored()//TODO:想想禁用鼠标最好的方法
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+        //Cursor.visible = false;
+    }
+
+    void MouseClickTurnOn()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        //Cursor.visible = true;
+    }
     public void AddCard(CardAsset c)
     {
-        if (cardNumberInHand >= 10)
+
+        if (cardNumberInHand + TradeInManager.Instance.cardsNumberInTrade < 10|| cardsFromTrade)
         {
-            Debug.Log("手牌满10张了");
+            //MouseClickIgnored();
+            List<CardAsset> cardAssets = new List<CardAsset>(cardAsset);
+            cardAssets.Add(c);
+            cardAsset = cardAssets.ToArray();
+
+            AddCardVisual();
             return;
         }
-
-        List<CardAsset> cardAssets = new List<CardAsset>(cardAsset);
-        cardAssets.Add(c);
-        cardAsset = cardAssets.ToArray();
-
-        AddCardVisual();
+        Debug.Log("手牌满10张了");
     }
 
     public void AddCardVisual()
@@ -62,8 +80,10 @@ public class HandVisualManager : MonoBehaviour
         }
 
         GameObject newCard = Instantiate(warriorCard, slots[instantiateIndex]);
-        OneCardManager NewCardOneCardManager = newCard.GetComponent<OneCardManager>();
+        var NewCardOneCardManager = newCard.GetComponent<OneCardManager>();
         NewCardOneCardManager.ChangeCardAsset(cardAsset[currentCardIndex]);
+        NewCardDrugAndReplace = newCard.GetComponent<CardDrugAndReplace>();
+        NewCardDrugAndReplace.notDrugCard(true);
 
         MoveToMiddle();
     }
@@ -73,7 +93,17 @@ public class HandVisualManager : MonoBehaviour
         if (cardNumberInHand > 0)
         {
             float moveDistanceX = -slotMoveDistanceX / 2;
-            Slot.transform.DOMoveX(Slot.transform.position.x + moveDistanceX, 0.5f);
+            //Slot.transform.DOMoveX(Slot.transform.position.x + moveDistanceX, 0.5f);
+
+            Sequence swapSequence = DOTween.Sequence();
+            swapSequence.Append(Slot.transform.DOMoveX(Slot.transform.position.x + moveDistanceX, 0.5f));
+            // 在动画完成后，恢复交互状态
+            swapSequence.OnComplete(() =>
+            {
+                // 鼠标点击输入开启
+                //MouseClickTurnOn();
+                NewCardDrugAndReplace.notDrugCard(false);
+            });
         }
     }
 
@@ -83,7 +113,14 @@ public class HandVisualManager : MonoBehaviour
         lastRemoveCardAsset = r.GetComponent<OneCardManager>().cardAsset;
         TradeInManager.Instance.AddCardInPretrade(lastRemoveCardAsset);
 
-        Slot.transform.DOMoveX(Slot.transform.position.x + slotMoveDistanceX / 2, 0.5f);
+        if (cardNumberInHand > 1)
+        {
+            Slot.transform.DOMoveX(Slot.transform.position.x + slotMoveDistanceX / 2, 0.5f);
+        }
+
+        List<CardAsset> cardAssets = new List<CardAsset>(cardAsset);
+        cardAssets.Remove(r.GetComponent<OneCardManager>().cardAsset);
+        cardAsset = cardAssets.ToArray();
 
         Destroy(r);
 
@@ -114,10 +151,15 @@ public class HandVisualManager : MonoBehaviour
         }
         yield return null;
     }
-    
-    
-    
-    
+
+    public void AddCardFromTrade(CardAsset c, bool x)
+    {
+        cardsFromTrade = x;
+        AddCard(c);
+        cardsFromTrade = false;
+    }
+
+
     /* 这个方法会改变 更改过位置的手牌的顺序
         void ReplenishGap()
     {

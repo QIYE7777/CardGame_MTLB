@@ -20,19 +20,6 @@ public class DeckManager : Singleton<DeckManager>
     {
         ShuffleArray(deck);
     }
-    public void DealCard()
-    {
-        if (deck.Length < 1)
-        {
-            Debug.Log("ÅÆ¿â±»³é¿ÕÁË");
-                return;
-        }
-        DealingCard?.Invoke(deck[0]);
-        List<CardAsset> cards = new List<CardAsset>(deck);
-        cards.Remove(deck[0]);
-        deck = cards.ToArray();
-    }
-
     void ShuffleArray<T>(T[] array)
     {
         for (int i = array.Length - 1; i > 0; i--)
@@ -46,4 +33,17 @@ public class DeckManager : Singleton<DeckManager>
             array[j] = temp;
         }
     }
+    public void DealCard()
+    {
+        if (deck.Length < 1)
+        {
+            Debug.Log("ÅÆ¿â±»³é¿ÕÁË");
+            return;
+        }
+        DealingCard?.Invoke(deck[0]);
+        List<CardAsset> cards = new List<CardAsset>(deck);
+        cards.Remove(deck[0]);
+        deck = cards.ToArray();
+    }
+
 }

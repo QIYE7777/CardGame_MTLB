@@ -18,6 +18,10 @@ public class CardDrugAndReplace : MonoBehaviour
     private Vector3 overlapCardPosition;
     private Collider overlapCard;
     private TradeInManager tradeInManager;
+    public Transform[] slotsInHand;
+
+    private Transform currentParent ;
+    private Transform overlapCardParent;
 
     private bool overlapTradeInArea;
 
@@ -62,12 +66,16 @@ public class CardDrugAndReplace : MonoBehaviour
         if (dragging)
             dragging = false;
 
+        tradeInManager?.glowFrame(false);
         visualCard.transform.Translate(0, -0.4f, 0.2f);
 
         if (overlapOtherCard)
         {
             isAnimating = true;
 
+            ReplaceCardsByParent();
+
+            /*
             // 使用 DOTween 将当前卡牌和重叠卡牌移动到彼此的位置
             Sequence swapSequence = DOTween.Sequence();
             swapSequence.Append(transform.DOMove(overlapCardPosition, 0.2f));
@@ -80,13 +88,12 @@ public class CardDrugAndReplace : MonoBehaviour
                 isAnimating = false;
                 overlapOtherCard = false;
                 overlapCard = null;
-            });
+            });*/
         }
         else if(overlapTradeInArea)
         {
             //TODO: 用减牌功能替换destroy
             GameManager.Instance.handVisualManger.RemoveCard(transform.gameObject);
-            //Destroy(gameObject, 0.01f);
         }
         else            
         {
@@ -103,6 +110,69 @@ public class CardDrugAndReplace : MonoBehaviour
             });
         }
     }
+
+    void ReplaceCardsByParent()
+    {
+        //slotsInHand = GameManager.Instance.handVisualManger.slots;
+        currentParent = transform.parent;
+        overlapCardParent = overlapCard.transform.parent;
+        if (overlapCardParent.childCount <= 1)
+        {
+            transform?.SetParent(overlapCardParent);
+
+            transform.localPosition = new Vector3(0, 0, 0);
+
+        }
+
+        if (currentParent.childCount == 0)
+        {
+            overlapCard?.transform.SetParent(currentParent);
+
+            overlapCard.transform.localPosition = new Vector3(0, 0, 0);
+
+        }
+
+        // 交换完毕后恢复状态
+        isAnimating = false;
+        overlapOtherCard = false;
+        overlapCard = null;
+
+    }
+
+    public void notDrugCard(bool c)
+    {
+        isAnimating = c; 
+    }
+
+    /*IEnumerator ReplaceCardsByParent()
+    {
+        //slotsInHand = GameManager.Instance.handVisualManger.slots;
+        currentParent = transform.parent;
+        overlapCardParent = overlapCard.transform.parent;
+        if(overlapCardParent.childCount <= 1)
+        {
+            transform?.SetParent(overlapCardParent);
+            yield return new WaitForSeconds(0.01f);
+            transform.localPosition = new Vector3(0, 0, 0);
+            yield return new WaitForSeconds(0.01f);
+        }
+        
+        if (currentParent.childCount == 0)
+        {
+            overlapCard?.transform.SetParent(currentParent);
+            yield return new WaitForSeconds(0.01f);
+            overlapCard.transform.localPosition = new Vector3(0, 0, 0);
+            yield return new WaitForSeconds(0.01f);
+        }
+        
+        yield return new WaitForSeconds(0.01f);
+        // 交换完毕后恢复状态
+        isAnimating = false;
+        overlapOtherCard = false;
+        overlapCard = null;
+        yield return null;
+    }*/
+
 
     private Vector3 MouseInWorldCoords() 
     {

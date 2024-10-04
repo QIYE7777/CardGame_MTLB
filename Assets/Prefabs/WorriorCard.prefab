@@ -369,7 +369,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.7906281, y: 2.7707891, z: 0.02}
+  m_Size: {x: 1.5132152, y: 2.4928105, z: 0.02}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &142142628458143219
 MonoBehaviour:
@@ -419,6 +419,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   UsePointerDisplacement: 1
   visualCard: {fileID: 5189718050880663194}
+  slotsInHand: []
 --- !u!54 &-3339794544611533955
 Rigidbody:
   m_ObjectHideFlags: 0
