@@ -11,6 +11,9 @@ public class TradeInManager : Singleton<TradeInManager>
     public Text ATKPoint;
     public float variationSpeed;
     public int timesForRolling = 1;
+    public GameObject arrowsUI;
+    public GameObject ATKPointUI;
+    public Collider myCollider;
 
     [HideInInspector]
     public int cardsNumberInTrade;
@@ -24,6 +27,7 @@ public class TradeInManager : Singleton<TradeInManager>
     private bool canAdd;
     private float targetATKPoint;
     private int timesHasRolled;
+
 
     private void Update()
     {
@@ -100,10 +104,14 @@ public class TradeInManager : Singleton<TradeInManager>
             return;
         }
         //清空PretradecardAsset中的所有东西
-        InPretradecardAsset = null;
+        InPretradecardAsset = new CardAsset[0];
+
+        myCollider.enabled = false;
         var i = MathF.Min(5, (float)Math.Floor(temporaryATKPoint / 5));
         rollDices?.Invoke((int)i);
         timesHasRolled++;
+        arrowsUI.SetActive(true);
+        ATKPointUI.SetActive(false);
     }
 
     #region 老式修改点数的方法

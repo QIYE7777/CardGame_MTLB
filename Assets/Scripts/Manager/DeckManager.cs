@@ -45,5 +45,4 @@ public class DeckManager : Singleton<DeckManager>
         cards.Remove(deck[0]);
         deck = cards.ToArray();
     }
-
 }

@@ -24,6 +24,7 @@ public class GameManager : Singleton<GameManager>
     IEnumerator DealDefaultCardsWithBreaks()
     {
         yield return new WaitForSeconds(0.1f);
+
         for (int i = 0; i<defaultNumberofCards; i++)
         {
             DealDefaultCards?.Invoke();

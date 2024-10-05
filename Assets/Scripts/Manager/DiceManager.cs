@@ -12,6 +12,7 @@ public class DiceManager : MonoBehaviour
     public GameObject dicesUI;
     public GameObject totalDicesUI;
     public GameObject collectButton;
+    public GameObject tickUI;
 
     private bool isRolling = false;
     private int totalDiceValue;
@@ -66,10 +67,32 @@ public class DiceManager : MonoBehaviour
 
     public void CollectCards() 
     {
+        totalDicesUI.SetActive(false);
+        tickUI.SetActive(true);
         collectButton.SetActive(false);
-        for (int i =0;i< totalDiceValue; i++)
+        StartCoroutine(CollectCardsIE());
+    }
+
+    IEnumerator CollectCardsIE()
+    {
+        yield return new WaitForSeconds(0.1f);
+        int tamporaryCanAddCardsInHand = GameManager.Instance.handVisualManger.canAddCardsInHand;
+        if (totalDiceValue <= tamporaryCanAddCardsInHand)
         {
-            DeckManager.Instance.DealCard();
+            for (int i = 0; i < totalDiceValue; i++)
+            {
+                DeckManager.Instance.DealCard();
+                yield return new WaitForSeconds(0.5f);
+            }
         }
+        else 
+        {
+            for (int i = 0; i < tamporaryCanAddCardsInHand + 1; i++)
+            {
+                DeckManager.Instance.DealCard();
+                yield return new WaitForSeconds(0.5f);
+            }
+        }
+        
     }
 }

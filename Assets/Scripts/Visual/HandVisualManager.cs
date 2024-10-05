@@ -10,17 +10,19 @@ public class HandVisualManager : MonoBehaviour
     public GameObject warriorCard;
     public GameObject Slot;
     public SameDistanceChildren sameDistanceChildren;
+    public int handCardsLimination = 10;
 
     public CardAsset lastRemoveCardAsset;
 
     private int cardNumber;
     public Transform[] slots;
     private float slotMoveDistanceX;
-    private int cardNumberInHand;
+    public int cardNumberInHand;
     private int instantiateIndex;
     bool cardsFromTrade = false;
     public EventSystem eventSystem;
     private CardDrugAndReplace NewCardDrugAndReplace;
+    public int canAddCardsInHand;
 
     private void Start()
     {
@@ -35,6 +37,9 @@ public class HandVisualManager : MonoBehaviour
     private void Update()
     {
         cardNumberInHand = cardAsset.Length;
+
+        //Debug.Log("可添加的剩余手牌数为" + canAddCardsInHand);
+        canAddCardsInHand = handCardsLimination - cardNumberInHand;
 
         ReplenishGap();
     }
@@ -52,8 +57,7 @@ public class HandVisualManager : MonoBehaviour
     }
     public void AddCard(CardAsset c)
     {
-
-        if (cardNumberInHand + TradeInManager.Instance.cardsNumberInTrade < 10|| cardsFromTrade)
+        if (cardNumberInHand + TradeInManager.Instance.cardsNumberInTrade < handCardsLimination || cardsFromTrade)
         {
             //MouseClickIgnored();
             List<CardAsset> cardAssets = new List<CardAsset>(cardAsset);
