@@ -105,6 +105,7 @@ public class HandVisualManager : MonoBehaviour
                 NewCardDrugAndReplace.notDrugCard(false);
             });
         }
+        else NewCardDrugAndReplace.notDrugCard(false);
     }
 
     public void RemoveCard(GameObject r)

@@ -392,7 +392,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: '  45  '
+  m_Text: '  0  '
 --- !u!1 &2602566265981504523
 GameObject:
   m_ObjectHideFlags: 0
@@ -917,6 +917,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   glowImage: {fileID: 6670790216572173966}
   InPretradecardAsset: []
+  ATKPoint: {fileID: 4651267027542164184}
+  variationSpeed: 10
   cardsNumberInTrade: 0
 --- !u!1 &5449221572099918033
 GameObject:

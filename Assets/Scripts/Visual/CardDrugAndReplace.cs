@@ -30,7 +30,7 @@ public class CardDrugAndReplace : MonoBehaviour
 
     private void OnMouseDown()
     {
-        //Debug.Log("点中此卡");
+        //Debug.Log(isAnimating);
 
         // 检查是否正在执行动画，正在执行动画时不允许操作
         if (isAnimating) return;
