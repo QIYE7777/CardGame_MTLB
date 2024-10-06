@@ -23,7 +23,9 @@ public class CardDrugAndReplace : MonoBehaviour
     private Transform currentParent ;
     private Transform overlapCardParent;
 
-    private bool overlapTradeInArea;
+    private GateManager gateManager;
+    public bool overlapTradeInArea;
+    public bool overlapGateArea;
 
     // 标识是否正在执行动画
     private static bool isAnimating = false;
@@ -67,6 +69,8 @@ public class CardDrugAndReplace : MonoBehaviour
             dragging = false;
 
         tradeInManager?.glowFrame(false);
+        gateManager?.glowFrame(false);
+
         visualCard.transform.Translate(0, -0.4f, 0.2f);
 
         if (overlapOtherCard)
@@ -93,6 +97,10 @@ public class CardDrugAndReplace : MonoBehaviour
         else if(overlapTradeInArea)
         {
             //TODO: 用减牌功能替换destroy
+            GameManager.Instance.handVisualManger.RemoveCard(transform.gameObject);
+        }
+        else if (overlapGateArea)
+        {
             GameManager.Instance.handVisualManger.RemoveCard(transform.gameObject);
         }
         else            
@@ -195,6 +203,12 @@ public class CardDrugAndReplace : MonoBehaviour
             tradeInManager = other.GetComponent<TradeInManager>();
             tradeInManager.glowFrame(true);
         }
+        if (other.CompareTag("GateArea"))
+        {
+            overlapGateArea = true;
+            gateManager = other.GetComponent<GateManager>();
+            gateManager.glowFrame(true);
+        }
     }
 
     private void OnTriggerExit(Collider other)
@@ -209,7 +223,13 @@ public class CardDrugAndReplace : MonoBehaviour
         {
             overlapTradeInArea = false;
             tradeInManager.glowFrame(false);
-            tradeInManager = null;
+            //overlapCard = null;
+        }
+        if (other.CompareTag("GateArea"))
+        {
+            overlapGateArea = false;
+            gateManager.glowFrame(false);
+            //overlapCard = null;
         }
     }
 }

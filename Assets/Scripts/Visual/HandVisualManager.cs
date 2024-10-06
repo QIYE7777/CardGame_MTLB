@@ -20,6 +20,7 @@ public class HandVisualManager : MonoBehaviour
     public int cardNumberInHand;
     private int instantiateIndex;
     bool cardsFromTrade = false;
+    bool cardsFromGate = false;
     public EventSystem eventSystem;
     private CardDrugAndReplace NewCardDrugAndReplace;
     public int canAddCardsInHand;
@@ -33,13 +34,14 @@ public class HandVisualManager : MonoBehaviour
 
         DeckManager.Instance.DealingCard += AddCard;
         TradeInManager.Instance.addCardFromTrade += AddCardFromTrade;
+        GateManager.Instance.addCardFromGate += AddCardFromGate;
     }
     private void Update()
     {
         cardNumberInHand = cardAsset.Length;
 
         //Debug.Log("可添加的剩余手牌数为" + canAddCardsInHand);
-        canAddCardsInHand = handCardsLimination - cardNumberInHand;
+        canAddCardsInHand = handCardsLimination - (cardNumberInHand + GateManager.Instance.cardsNumberInGate);
 
         ReplenishGap();
     }
@@ -57,7 +59,7 @@ public class HandVisualManager : MonoBehaviour
     }
     public void AddCard(CardAsset c)
     {
-        if (cardNumberInHand + TradeInManager.Instance.cardsNumberInTrade < handCardsLimination || cardsFromTrade)
+        if (cardNumberInHand + TradeInManager.Instance.cardsNumberInTrade + GateManager.Instance.cardsNumberInGate   < handCardsLimination || cardsFromTrade ||cardsFromGate)
         {
             //MouseClickIgnored();
             List<CardAsset> cardAssets = new List<CardAsset>(cardAsset);
@@ -116,7 +118,12 @@ public class HandVisualManager : MonoBehaviour
     {
         //移除的牌会被存到TradeIn中
         lastRemoveCardAsset = r.GetComponent<OneCardManager>().cardAsset;
-        TradeInManager.Instance.AddCardInPretrade(lastRemoveCardAsset);
+        
+        if(r.GetComponent<CardDrugAndReplace>().overlapTradeInArea)
+            TradeInManager.Instance.AddCardInPretrade(lastRemoveCardAsset);
+
+        if (r.GetComponent<CardDrugAndReplace>().overlapGateArea)
+            GateManager.Instance.AddCardInPreGateAsset(lastRemoveCardAsset);
 
         if (cardNumberInHand > 1)
         {
@@ -162,6 +169,13 @@ public class HandVisualManager : MonoBehaviour
         cardsFromTrade = x;
         AddCard(c);
         cardsFromTrade = false;
+    }
+
+    public void AddCardFromGate(CardAsset c, bool x)
+    {
+        cardsFromGate = x;
+        AddCard(c);
+        cardsFromGate = false;
     }
 
 
