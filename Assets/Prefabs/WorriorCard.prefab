@@ -326,6 +326,7 @@ GameObject:
   - component: {fileID: 6913345771258586225}
   - component: {fileID: 6246802417598331385}
   - component: {fileID: -3339794544611533955}
+  - component: {fileID: 678961240580954904}
   m_Layer: 0
   m_Name: WorriorCard
   m_TagString: WorriorCard
@@ -420,6 +421,10 @@ MonoBehaviour:
   UsePointerDisplacement: 1
   visualCard: {fileID: 5189718050880663194}
   slotsInHand: []
+  enemyManager: {fileID: 0}
+  overlapTradeInArea: 0
+  overlapGateArea: 0
+  overlapEnemyArea: 0
 --- !u!54 &-3339794544611533955
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -447,6 +452,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!225 &678961240580954904
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2776969664153851050}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &2780024822613206619
 GameObject:
   m_ObjectHideFlags: 0

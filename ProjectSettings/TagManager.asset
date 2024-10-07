@@ -7,6 +7,7 @@ TagManager:
   - WorriorCard
   - TradeInArea
   - GateArea
+  - EnemyArea
   layers:
   - Default
   - TransparentFX

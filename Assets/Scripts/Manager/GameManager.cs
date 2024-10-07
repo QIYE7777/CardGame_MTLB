@@ -11,9 +11,10 @@ public class GameManager : Singleton<GameManager>
     [Header("Reference")]
     public DeckManager deckManager;
     public HandVisualManager handVisualManger;
+    public EnemyManager enemyManager;
 
     public event Action DealDefaultCards;
-    
+
     private void Start()
     {
         StartCoroutine(DealDefaultCardsWithBreaks());

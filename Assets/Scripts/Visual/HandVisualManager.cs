@@ -11,6 +11,7 @@ public class HandVisualManager : MonoBehaviour
     public GameObject Slot;
     public SameDistanceChildren sameDistanceChildren;
     public int handCardsLimination = 10;
+    public AudioSource dealSound;
 
     public CardAsset lastRemoveCardAsset;
 
@@ -21,6 +22,7 @@ public class HandVisualManager : MonoBehaviour
     private int instantiateIndex;
     bool cardsFromTrade = false;
     bool cardsFromGate = false;
+    bool cardsFromEnemy = false;
     public EventSystem eventSystem;
     private CardDrugAndReplace NewCardDrugAndReplace;
     public int canAddCardsInHand;
@@ -35,6 +37,7 @@ public class HandVisualManager : MonoBehaviour
         DeckManager.Instance.DealingCard += AddCard;
         TradeInManager.Instance.addCardFromTrade += AddCardFromTrade;
         GateManager.Instance.addCardFromGate += AddCardFromGate;
+        GameManager.Instance.enemyManager.addCardFromPreBattle += AddCardFromEnemyPreBattle;
     }
     private void Update()
     {
@@ -61,6 +64,8 @@ public class HandVisualManager : MonoBehaviour
     {
         if (cardNumberInHand + TradeInManager.Instance.cardsNumberInTrade + GateManager.Instance.cardsNumberInGate   < handCardsLimination || cardsFromTrade ||cardsFromGate)
         {
+            dealSound.Play();
+
             //MouseClickIgnored();
             List<CardAsset> cardAssets = new List<CardAsset>(cardAsset);
             cardAssets.Add(c);
@@ -116,7 +121,6 @@ public class HandVisualManager : MonoBehaviour
 
     public void RemoveCard(GameObject r)
     {
-        //移除的牌会被存到TradeIn中
         lastRemoveCardAsset = r.GetComponent<OneCardManager>().cardAsset;
         
         if(r.GetComponent<CardDrugAndReplace>().overlapTradeInArea)
@@ -124,6 +128,9 @@ public class HandVisualManager : MonoBehaviour
 
         if (r.GetComponent<CardDrugAndReplace>().overlapGateArea)
             GateManager.Instance.AddCardInPreGateAsset(lastRemoveCardAsset);
+
+        if (r.GetComponent<CardDrugAndReplace>().overlapEnemyArea)
+            GameManager.Instance.enemyManager.AddCardInPreBattle(lastRemoveCardAsset);
 
         if (cardNumberInHand > 1)
         {
@@ -177,8 +184,36 @@ public class HandVisualManager : MonoBehaviour
         AddCard(c);
         cardsFromGate = false;
     }
+    public void AddCardFromEnemyPreBattle(CardAsset c, bool x)
+    {
+        cardsFromEnemy = x;
+        AddCard(c);
+        cardsFromEnemy = false;
+    }
 
+    public void RandomLoseCard()
+    {
+        int ranfomIndex = Random.Range(0, cardAsset.Length - 1);
+        GameObject randomCard = slots[ranfomIndex].GetChild(0).gameObject;
 
+        List<CardAsset> cardAssets = new List<CardAsset>(cardAsset);
+        cardAssets.Remove(randomCard.GetComponent<OneCardManager>().cardAsset);
+        cardAsset = cardAssets.ToArray();
+
+        randomCard.transform.DOMoveY(0.01f, 1);
+        randomCard.GetComponent<CanvasGroup>().DOFade(0, 0.9f);
+
+        StartCoroutine(RandomLoseCardIE(randomCard));
+    }
+    IEnumerator RandomLoseCardIE(GameObject r)
+    {
+        yield return new WaitForSeconds(1);
+        if (cardNumberInHand > 1)
+        {
+            Slot.transform.DOMoveX(Slot.transform.position.x + slotMoveDistanceX / 2, 0.5f);
+        }
+        Destroy(r);
+    }
     /* 这个方法会改变 更改过位置的手牌的顺序
         void ReplenishGap()
     {

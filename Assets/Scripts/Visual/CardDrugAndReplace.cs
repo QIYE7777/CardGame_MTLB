@@ -24,8 +24,10 @@ public class CardDrugAndReplace : MonoBehaviour
     private Transform overlapCardParent;
 
     private GateManager gateManager;
+    public EnemyManager enemyManager;
     public bool overlapTradeInArea;
     public bool overlapGateArea;
+    public bool overlapEnemyArea;
 
     // 标识是否正在执行动画
     private static bool isAnimating = false;
@@ -70,6 +72,7 @@ public class CardDrugAndReplace : MonoBehaviour
 
         tradeInManager?.glowFrame(false);
         gateManager?.glowFrame(false);
+        enemyManager?.glowFrame(false);
 
         visualCard.transform.Translate(0, -0.4f, 0.2f);
 
@@ -94,15 +97,20 @@ public class CardDrugAndReplace : MonoBehaviour
                 overlapCard = null;
             });*/
         }
-        else if(overlapTradeInArea)
+        else if(overlapTradeInArea|| overlapGateArea )
         {
             //TODO: 用减牌功能替换destroy
             GameManager.Instance.handVisualManger.RemoveCard(transform.gameObject);
         }
-        else if (overlapGateArea)
+        else if (overlapEnemyArea)
         {
+            if (enemyManager.isDead) return;
             GameManager.Instance.handVisualManger.RemoveCard(transform.gameObject);
         }
+        /*else if (overlapGateArea)
+        {
+            GameManager.Instance.handVisualManger.RemoveCard(transform.gameObject);
+        }*/
         else            
         {
             isAnimating = true;
@@ -209,6 +217,12 @@ public class CardDrugAndReplace : MonoBehaviour
             gateManager = other.GetComponent<GateManager>();
             gateManager.glowFrame(true);
         }
+        if (other.CompareTag("EnemyArea"))
+        {
+            overlapEnemyArea = true;
+            enemyManager = other.GetComponent<EnemyManager>();
+            enemyManager.glowFrame(true);
+        }
     }
 
     private void OnTriggerExit(Collider other)
@@ -230,6 +244,11 @@ public class CardDrugAndReplace : MonoBehaviour
             overlapGateArea = false;
             gateManager.glowFrame(false);
             //overlapCard = null;
+        }
+        if (other.CompareTag("EnemyArea"))
+        {
+            overlapEnemyArea = false;
+            enemyManager.glowFrame(false);
         }
     }
 }
