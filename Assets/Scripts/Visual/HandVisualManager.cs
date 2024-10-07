@@ -26,7 +26,7 @@ public class HandVisualManager : MonoBehaviour
     public EventSystem eventSystem;
     private CardDrugAndReplace NewCardDrugAndReplace;
     public int canAddCardsInHand;
-
+    public int cardNumberInGate;
     private void Start()
     {
         slots = sameDistanceChildren.children;
@@ -35,16 +35,18 @@ public class HandVisualManager : MonoBehaviour
         cardNumberInHand = 0;
 
         DeckManager.Instance.DealingCard += AddCard;
-        TradeInManager.Instance.addCardFromTrade += AddCardFromTrade;
-        GateManager.Instance.addCardFromGate += AddCardFromGate;
-        GameManager.Instance.enemyManager.addCardFromPreBattle += AddCardFromEnemyPreBattle;
+        //TradeInManager.Instance.addCardFromTrade += AddCardFromTrade;
+        //GateManager.Instance.addCardFromGate += AddCardFromGate;
+        //EnemyManager.Instance.addCardFromPreBattle += AddCardFromEnemyPreBattle;
     }
     private void Update()
     {
         cardNumberInHand = cardAsset.Length;
+        /*if (RoomSwitcher.Instance.currentRoomIndex >=0 && cardNumberInHand + TradeInManager.Instance.cardsNumberInTrade + GateManager.Instance.cardsNumberInGate <= 0)
+            GameManager.Instance.PlayerDead();*/
 
         //Debug.Log("可添加的剩余手牌数为" + canAddCardsInHand);
-        canAddCardsInHand = handCardsLimination - (cardNumberInHand + GateManager.Instance.cardsNumberInGate);
+        canAddCardsInHand = handCardsLimination - (cardNumberInHand + cardNumberInGate);
 
         ReplenishGap();
     }
@@ -130,7 +132,7 @@ public class HandVisualManager : MonoBehaviour
             GateManager.Instance.AddCardInPreGateAsset(lastRemoveCardAsset);
 
         if (r.GetComponent<CardDrugAndReplace>().overlapEnemyArea)
-            GameManager.Instance.enemyManager.AddCardInPreBattle(lastRemoveCardAsset);
+            EnemyManager.Instance.AddCardInPreBattle(lastRemoveCardAsset);
 
         if (cardNumberInHand > 1)
         {
@@ -183,6 +185,7 @@ public class HandVisualManager : MonoBehaviour
         cardsFromGate = x;
         AddCard(c);
         cardsFromGate = false;
+        Debug.Log(cardsFromGate);
     }
     public void AddCardFromEnemyPreBattle(CardAsset c, bool x)
     {
@@ -193,6 +196,7 @@ public class HandVisualManager : MonoBehaviour
 
     public void RandomLoseCard()
     {
+        if (cardNumberInHand == 0) return;
         int ranfomIndex = Random.Range(0, cardAsset.Length - 1);
         GameObject randomCard = slots[ranfomIndex].GetChild(0).gameObject;
 

@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5117670498b1eaa4c9ccd2fed628476d, type: 3}
-  m_Name: Enemy_1
+  m_Name: Enemy_20
   m_EditorClassIdentifier: 
   Description: dsfsds sdfsdfsdfs sfdsf sdfsdfs
   CardImage: {fileID: -23939810, guid: 05a03c03b6d30bc439c950e42a24d629, type: 3}
-  Health: 15
+  Health: 20
   SuitIcon: {fileID: 0}
   Suit: 0

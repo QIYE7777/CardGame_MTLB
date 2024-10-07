@@ -16,11 +16,13 @@ public class GateManager : Singleton<GateManager>
     public CardAsset[] arrayForFlush;
     public Text[] visualInGateList;
     private int visualCount = 0;
+    private bool isPressButton;
 
-    public event Action<CardAsset, bool> addCardFromGate;
+    //public event Action<CardAsset, bool> addCardFromGate;
     private void Update()
     {
         cardsNumberInGate = InPreOpenGateAsset.Length;
+        GameManager.Instance.handVisualManger.cardNumberInGate = cardsNumberInGate;
         CheckATKPoint();
     }
     public void glowFrame(bool x)
@@ -38,6 +40,8 @@ public class GateManager : Singleton<GateManager>
     public void giveAllCardsBack()
     {
         if (InPreOpenGateAsset == null) return;
+        if (isPressButton) return;
+        isPressButton = true;
 
         //°ÑvisualInGateListÇå¿Õ
         visualCount = 0;
@@ -52,18 +56,20 @@ public class GateManager : Singleton<GateManager>
             t.text = "  ";
             yield return new WaitForSeconds(0.6f);
         }
+        isPressButton = false;
     }
     IEnumerator giveAllCardsBackIE()
     {
         foreach (CardAsset i in InPreOpenGateAsset)
         {
-            addCardFromGate?.Invoke(i, true);
+            GameManager.Instance.handVisualManger.AddCardFromGate(i, true);
             yield return new WaitForSeconds(0.5f);
             List<CardAsset> InPretradecardAssets = new List<CardAsset>(InPreOpenGateAsset);
             InPretradecardAssets.Remove(i);
             InPreOpenGateAsset = InPretradecardAssets.ToArray();
             yield return new WaitForSeconds(0.05f);
         }
+        isPressButton = false;
     }
     void RefreshATKPoint()
     {

@@ -8,6 +8,7 @@ TagManager:
   - TradeInArea
   - GateArea
   - EnemyArea
+  - DontDestroy
   layers:
   - Default
   - TransparentFX

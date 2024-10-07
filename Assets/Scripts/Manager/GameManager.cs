@@ -11,18 +11,18 @@ public class GameManager : Singleton<GameManager>
     [Header("Reference")]
     public DeckManager deckManager;
     public HandVisualManager handVisualManger;
-    public EnemyManager enemyManager;
+    public GameObject dontDestroy;
 
     public event Action DealDefaultCards;
 
-    private void Start()
+    public void DealDefaultCardsWithBreaks()
     {
-        StartCoroutine(DealDefaultCardsWithBreaks());
+        StartCoroutine(DealDefaultCardsWithBreaksIE());
     }
 
     #region 发初始手牌
     //发初始手牌
-    IEnumerator DealDefaultCardsWithBreaks()
+    IEnumerator DealDefaultCardsWithBreaksIE()
     {
         yield return new WaitForSeconds(0.1f);
 
@@ -34,5 +34,13 @@ public class GameManager : Singleton<GameManager>
     }
     #endregion
 
-
+    public void PlayerDead()
+    {
+        Debug.Log("playerDead");
+    }
+    public void Retreat()
+    {
+        RoomSwitcher.Instance.BackToUI();
+        Destroy(dontDestroy);
+    }
 }

@@ -12,12 +12,13 @@ public class DeckManager : Singleton<DeckManager>
     protected override void Awake()
     {
         base.Awake();
-        GameManager.Instance.DealDefaultCards += DealCard;
-        DontDestroyOnLoad(this);
+
+        //DontDestroyOnLoad(this);
     }
 
     private void Start()
     {
+        GameManager.Instance.DealDefaultCards += DealCard;
         ShuffleArray(deck);
     }
     void ShuffleArray<T>(T[] array)

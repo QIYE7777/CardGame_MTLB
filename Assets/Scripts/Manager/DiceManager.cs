@@ -93,6 +93,5 @@ public class DiceManager : MonoBehaviour
                 yield return new WaitForSeconds(0.5f);
             }
         }
-        
     }
 }

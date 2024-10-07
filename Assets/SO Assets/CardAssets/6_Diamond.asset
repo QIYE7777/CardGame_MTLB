@@ -15,5 +15,5 @@ MonoBehaviour:
   Description: 
   CardImage: {fileID: 21300000, guid: 82934618fdc03934b89f24e00172fe43, type: 3}
   ATK: 6
-  SuitIcon: {fileID: -1824988634, guid: 189f548e7459e4e44b534c9283464aa9, type: 3}
+  SuitIcon: {fileID: 1694569595, guid: 4442c4937c641b34dbc1ec9b4d6ace65, type: 3}
   Suit: 1

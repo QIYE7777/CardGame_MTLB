@@ -19,7 +19,7 @@ public class TradeInManager : Singleton<TradeInManager>
     public int cardsNumberInTrade;
     float decrementToZeroSpeed;
 
-    public event Action<CardAsset,bool> addCardFromTrade;
+    //public event Action<CardAsset,bool> addCardFromTrade;
     public event Action<int> rollDices;
 
     private float temporaryATKPoint;
@@ -27,7 +27,7 @@ public class TradeInManager : Singleton<TradeInManager>
     private bool canAdd;
     private float targetATKPoint;
     private int timesHasRolled;
-
+    private bool isPressButton;
 
     private void Update()
     {
@@ -67,6 +67,9 @@ public class TradeInManager : Singleton<TradeInManager>
 
     public void giveAllCardsBack()
     {
+        if (isPressButton) return;
+        isPressButton = true;
+
         if (InPretradecardAsset == null) return;
         StartCoroutine(giveAllCardsBackIE());
         targetATKPoint = 0;
@@ -77,13 +80,14 @@ public class TradeInManager : Singleton<TradeInManager>
     {
         foreach (CardAsset i in InPretradecardAsset)
         {
-            addCardFromTrade?.Invoke(i,true);
+            GameManager.Instance.handVisualManger. AddCardFromTrade(i,true);
             yield return new WaitForSeconds(0.5f);
             List<CardAsset> InPretradecardAssets = new List<CardAsset>(InPretradecardAsset);
             InPretradecardAssets.Remove(i);
             InPretradecardAsset = InPretradecardAssets.ToArray();
             yield return new WaitForSeconds(0.05f);
         }
+        isPressButton = false;
     }
 
     void RefreshATKPoint()
@@ -107,7 +111,7 @@ public class TradeInManager : Singleton<TradeInManager>
         InPretradecardAsset = new CardAsset[0];
 
         myCollider.enabled = false;
-        var i = MathF.Min(5, (float)Math.Floor(temporaryATKPoint / 5));
+        var i = MathF.Min(5, (float)Math.Floor(targetATKPoint / 5));
         rollDices?.Invoke((int)i);
         timesHasRolled++;
         arrowsUI.SetActive(true);

@@ -15,5 +15,5 @@ MonoBehaviour:
   Description: Adds 3 power to worriors of the same suit
   CardImage: {fileID: 21300000, guid: 902b25115fb77be4a8210b381adea0d0, type: 3}
   ATK: 1
-  SuitIcon: {fileID: -1824988634, guid: 189f548e7459e4e44b534c9283464aa9, type: 3}
+  SuitIcon: {fileID: 1694569595, guid: 4442c4937c641b34dbc1ec9b4d6ace65, type: 3}
   Suit: 1

@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using DG.Tweening;
 using System;
 
-public class EnemyManager : MonoBehaviour
+public class EnemyManager : Singleton<EnemyManager>
 {
     public EnemyAsset enemyAsset;
     public Text healthUI;
@@ -23,12 +23,15 @@ public class EnemyManager : MonoBehaviour
     public Text[] visualInEnemyPreList;
     private int visualCount = 0;
     public GameObject deadthIcon;
+    public GameObject enemyPanal;
+    public AudioSource roar;
 
+    private bool isPressButton;
     private float temporaryHealth;
     private float health;
     private int damage = 0;
 
-    public event Action<CardAsset, bool> addCardFromPreBattle;
+    //public event Action<CardAsset, bool> addCardFromPreBattle;
 
     private void Start()
     {
@@ -76,6 +79,8 @@ public class EnemyManager : MonoBehaviour
             healthUIob.SetActive(false);
             deadthIcon.SetActive(true);
             damage = 0;
+
+            RoomManager.Instance.FromBattleToRecruit();
         }
         if (health > 0)
         {
@@ -88,8 +93,14 @@ public class EnemyManager : MonoBehaviour
     IEnumerator AttackPlayer()//吞食玩家一张牌
     {
         //TODO:可以加个动画或者提示啥的
-        yield return null;
+        yield return new WaitForSeconds(1);
+        AtackAnimation();
         GameManager.Instance.handVisualManger.RandomLoseCard();
+    }
+    void AtackAnimation()
+    {
+        roar.Play();
+        enemyPanal.transform.DOShakePosition(1f, 3, 60,5);
     }
     void CheckHealth()
     {
@@ -130,6 +141,8 @@ public class EnemyManager : MonoBehaviour
     public void giveAllCardsBack()
     {
         if (InPreBattleGateAsset == null) return;
+        if (isPressButton) return;
+        isPressButton = true;
 
         //把visualInGateList清空
         visualCount = 0;
@@ -144,18 +157,20 @@ public class EnemyManager : MonoBehaviour
             t.text = "  ";
             yield return new WaitForSeconds(0.6f);
         }
+        isPressButton = false;
     }
     IEnumerator giveAllCardsBackIE()
     {
         foreach (CardAsset i in InPreBattleGateAsset)
         {
-            addCardFromPreBattle?.Invoke(i, true);
+            GameManager.Instance.handVisualManger.AddCardFromEnemyPreBattle(i, true);
             yield return new WaitForSeconds(0.5f);
             List<CardAsset> InPretradecardAssets = new List<CardAsset>(InPreBattleGateAsset);
             InPretradecardAssets.Remove(i);
             InPreBattleGateAsset = InPretradecardAssets.ToArray();
             yield return new WaitForSeconds(0.05f);
         }
+        isPressButton = false;
     }
     void VisualInEnemyPre(CardAsset c)
     {
