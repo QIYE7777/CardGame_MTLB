@@ -1365,6 +1365,7 @@ MonoBehaviour:
   battleArea: {fileID: 60494211}
   recruitArea: {fileID: 1462214352}
   enemyManager: {fileID: 8933423552344633886}
+  nextLevelButton: {fileID: 773144258}
   enemyAssets_15:
   - {fileID: 11400000, guid: 818452f270881fc419a4245f81e775ef, type: 2}
   enemyAssets_20:

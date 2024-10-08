@@ -58,7 +58,7 @@ public class TradeInManager : Singleton<TradeInManager>
         InPretradecardAssets.Add(c);
         InPretradecardAsset = InPretradecardAssets.ToArray();
 
-
+        RoomManager.Instance.nextLevelButton.SetActive(false);
         //addATKPoint
         //temporaryATKPoint += c.ATK;
         targetATKPoint = targetATKPoint + c.ATK;
@@ -68,6 +68,7 @@ public class TradeInManager : Singleton<TradeInManager>
     public void giveAllCardsBack()
     {
         if (isPressButton) return;
+        if (cardsNumberInTrade == 0) return;
         isPressButton = true;
 
         if (InPretradecardAsset == null) return;
@@ -87,6 +88,7 @@ public class TradeInManager : Singleton<TradeInManager>
             InPretradecardAsset = InPretradecardAssets.ToArray();
             yield return new WaitForSeconds(0.05f);
         }
+        RoomManager.Instance.nextLevelButton.SetActive(true);
         isPressButton = false;
     }
 
@@ -102,7 +104,7 @@ public class TradeInManager : Singleton<TradeInManager>
             Debug.Log("你只能投" + timesForRolling + "次骰子");
             return;
         }
-        if (temporaryATKPoint < 5)
+        if (targetATKPoint < 5)
         {
             Debug.Log("点数不足以roll a dice");
             return;

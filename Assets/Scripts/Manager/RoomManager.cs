@@ -9,6 +9,7 @@ public class RoomManager : Singleton<RoomManager>
     public GameObject battleArea;
     public GameObject recruitArea;
     public EnemyManager enemyManager;
+    public GameObject nextLevelButton;
 
     public EnemyAsset[] enemyAssets_15;
     public EnemyAsset[] enemyAssets_20;

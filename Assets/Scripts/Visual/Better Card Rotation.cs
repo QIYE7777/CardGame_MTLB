@@ -14,6 +14,7 @@ public class BetterCardRotation : MonoBehaviour
     void Update()
     {
         RaycastHit[] hits;
+        if (Camera.main.transform == null) return;
         Vector3 cameraToFacePoint = facePoint.transform.position - Camera.main.transform.position;
         hits = Physics.RaycastAll(Camera.main.transform.position,cameraToFacePoint,cameraToFacePoint.magnitude);
 

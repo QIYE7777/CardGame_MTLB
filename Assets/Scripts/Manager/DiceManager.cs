@@ -38,6 +38,7 @@ public class DiceManager : MonoBehaviour
     IEnumerator RollDiceIE(int c)
     {
         isRolling = true;
+        RoomManager.Instance.nextLevelButton.SetActive(false);
         float elapsedTime = 0;
         while (elapsedTime < duration)
         {
@@ -84,6 +85,7 @@ public class DiceManager : MonoBehaviour
                 DeckManager.Instance.DealCard();
                 yield return new WaitForSeconds(0.5f);
             }
+            RoomManager.Instance.nextLevelButton.SetActive(true);
         }
         else 
         {
@@ -92,6 +94,7 @@ public class DiceManager : MonoBehaviour
                 DeckManager.Instance.DealCard();
                 yield return new WaitForSeconds(0.5f);
             }
+            RoomManager.Instance.nextLevelButton.SetActive(true);
         }
     }
 }

@@ -30,7 +30,7 @@ public class EnemyManager : Singleton<EnemyManager>
     private float temporaryHealth;
     private float health;
     private int damage = 0;
-
+    private CardDrugAndReplace cardDrugAndReplace;
     //public event Action<CardAsset, bool> addCardFromPreBattle;
 
     private void Start()
@@ -93,9 +93,14 @@ public class EnemyManager : Singleton<EnemyManager>
     IEnumerator AttackPlayer()//吞食玩家一张牌
     {
         //TODO:可以加个动画或者提示啥的
+        GameManager.Instance.handVisualManger.NewCardDrugAndReplace.notDrugCard(true);
         yield return new WaitForSeconds(1);
         AtackAnimation();
         GameManager.Instance.handVisualManger.RandomLoseCard();
+        yield return new WaitForSeconds(0.01f);
+        GameManager.Instance.CheckPlayerDead();
+        yield return new WaitForSeconds(1.3f);
+        GameManager.Instance.handVisualManger.NewCardDrugAndReplace.notDrugCard(false);
     }
     void AtackAnimation()
     {

@@ -24,7 +24,7 @@ public class HandVisualManager : MonoBehaviour
     bool cardsFromGate = false;
     bool cardsFromEnemy = false;
     public EventSystem eventSystem;
-    private CardDrugAndReplace NewCardDrugAndReplace;
+    public  CardDrugAndReplace NewCardDrugAndReplace;
     public int canAddCardsInHand;
     public int cardNumberInGate;
     private void Start()

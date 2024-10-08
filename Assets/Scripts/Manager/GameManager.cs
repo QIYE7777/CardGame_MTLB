@@ -34,9 +34,23 @@ public class GameManager : Singleton<GameManager>
     }
     #endregion
 
-    public void PlayerDead()
+    public void CheckPlayerDead()
     {
-        Debug.Log("playerDead");
+        int allCards = handVisualManger.cardNumberInHand + EnemyManager.Instance.InPreBattleGateAsset.Length;
+        if (allCards <= 0)
+        {
+            StartCoroutine(CheckPlayerDeadIE());
+        }
+    }
+    IEnumerator CheckPlayerDeadIE()
+    {
+        Cursor.lockState = CursorLockMode.Locked; // 锁定鼠标位置
+        Cursor.visible = false;                   // 隐藏鼠标光标
+        Debug.Log("GameOver");
+        yield return new WaitForSeconds(1.5f);
+        Retreat();
+        Cursor.lockState = CursorLockMode.None; // 解除鼠标锁定
+        Cursor.visible = true;                  // 显示鼠标光标
     }
     public void Retreat()
     {
