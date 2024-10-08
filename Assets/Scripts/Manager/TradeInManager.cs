@@ -28,6 +28,7 @@ public class TradeInManager : Singleton<TradeInManager>
     private float targetATKPoint;
     private int timesHasRolled;
     private bool isPressButton;
+    private int oneCount = 0;
 
     private void Update()
     {
@@ -58,6 +59,16 @@ public class TradeInManager : Singleton<TradeInManager>
         InPretradecardAssets.Add(c);
         InPretradecardAsset = InPretradecardAssets.ToArray();
 
+        //No.1card 的技能：能够在招募阶段直接换取一颗骰子
+        if (c.ATK == 1)
+        {
+            oneCount++;
+            DiceManager.Instance.glowFrame(true);
+        }
+        //NO.3 3在战斗和招募中视为9
+        if (c.ATK == 3)
+            targetATKPoint += 6;
+
         RoomManager.Instance.nextLevelButton.SetActive(false);
         //addATKPoint
         //temporaryATKPoint += c.ATK;
@@ -81,6 +92,9 @@ public class TradeInManager : Singleton<TradeInManager>
     {
         foreach (CardAsset i in InPretradecardAsset)
         {
+            if (i.ATK == 1)
+                oneCount--;
+            if (oneCount<=0) DiceManager.Instance.glowFrame(false);
             GameManager.Instance.handVisualManger. AddCardFromTrade(i,true);
             yield return new WaitForSeconds(0.5f);
             List<CardAsset> InPretradecardAssets = new List<CardAsset>(InPretradecardAsset);
@@ -104,16 +118,21 @@ public class TradeInManager : Singleton<TradeInManager>
             Debug.Log("你只能投" + timesForRolling + "次骰子");
             return;
         }
-        if (targetATKPoint < 5)
+        if (targetATKPoint < 5 && oneCount <= 0 )
         {
             Debug.Log("点数不足以roll a dice");
             return;
         }
+
         //清空PretradecardAsset中的所有东西
         InPretradecardAsset = new CardAsset[0];
 
+        DiceManager.Instance.glowFrame(false);
+        targetATKPoint = targetATKPoint - oneCount;
+
         myCollider.enabled = false;
         var i = MathF.Min(5, (float)Math.Floor(targetATKPoint / 5));
+        i = i + oneCount;
         rollDices?.Invoke((int)i);
         timesHasRolled++;
         arrowsUI.SetActive(true);

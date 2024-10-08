@@ -46,7 +46,6 @@ public static class CalculatePointTool
         {
             finalPoint += x.ATK;
         }
-        Debug.Log(finalPoint);
     }
 
     static void CheckPair(CardAsset[] c)

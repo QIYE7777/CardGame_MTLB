@@ -406,6 +406,7 @@ MonoBehaviour:
   graphic: {fileID: 7024536103492989840}
   suit: {fileID: 8433521137523634606}
   descriptionComponment: {fileID: 2514062723669892805}
+  glowImage: {fileID: 6320048866522938573}
 --- !u!114 &6246802417598331385
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1083,7 +1084,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.4367188, g: 0.9056604, b: 0.4229263, a: 1}
+  m_Color: {r: 0.8584906, g: 0.36634555, b: 0.2713154, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

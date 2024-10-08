@@ -9,6 +9,8 @@ public class DeckManager : Singleton<DeckManager>
 
     public CardAsset[] deck;
 
+    public bool cardInHandFull;
+
     protected override void Awake()
     {
         base.Awake();
@@ -42,6 +44,11 @@ public class DeckManager : Singleton<DeckManager>
             return;
         }
         DealingCard?.Invoke(deck[0]);
+        if (cardInHandFull)
+        {
+            cardInHandFull = false;
+            return; 
+        }
         List<CardAsset> cards = new List<CardAsset>(deck);
         cards.Remove(deck[0]);
         deck = cards.ToArray();

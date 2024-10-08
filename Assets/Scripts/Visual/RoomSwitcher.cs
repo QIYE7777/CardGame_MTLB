@@ -2,11 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System;
 
 public class RoomSwitcher : Singleton<RoomSwitcher>
 {
     public string[] rooms;
     public int currentRoomIndex = -1;
+
+    public event Action OpenandCloseGlowImageEvent;
     private void Start()
     {
         currentRoomIndex = 0;
@@ -22,6 +25,12 @@ public class RoomSwitcher : Singleton<RoomSwitcher>
         }
         SceneManager.LoadScene(rooms[currentRoomIndex], LoadSceneMode.Single);
         currentRoomIndex++;
+        if (currentRoomIndex == rooms.Length)
+        {
+            OpenandCloseGlowImageEvent?.Invoke();
+            Debug.Log("454545");
+        }
+
     }
 
     public void BackToUI()

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class DiceManager : MonoBehaviour
+public class DiceManager : Singleton<DiceManager>
 {
     public float duration;
     public Text[] diceText;
@@ -13,6 +13,7 @@ public class DiceManager : MonoBehaviour
     public GameObject totalDicesUI;
     public GameObject collectButton;
     public GameObject tickUI;
+    public GameObject glowImage;
 
     private bool isRolling = false;
     private int totalDiceValue;
@@ -21,7 +22,10 @@ public class DiceManager : MonoBehaviour
     {
         TradeInManager.Instance.rollDices += RollDice;
     }
-
+    public void glowFrame(bool x)
+    {
+        glowImage.SetActive(x);
+    }
     public void RollDice(int i)
     {
         if (isRolling) return;

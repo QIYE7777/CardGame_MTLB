@@ -13,6 +13,7 @@ public class OneCardManager : MonoBehaviour
     public Image suit;
     [Header("Other")]
     public RectTransform descriptionComponment;
+    public GameObject glowImage;
 
     private void Awake()
     {
@@ -21,6 +22,22 @@ public class OneCardManager : MonoBehaviour
             ReadFromCardAsset();
             RemoveDescription();
         }
+
+        RoomSwitcher.Instance.OpenandCloseGlowImageEvent += OpenAndCloseGlowImageFor2and3;
+    }
+    private void Start()
+    {
+        if (cardAsset.ATK == 3) glowImage.SetActive(true);
+    }
+
+    public void OpenAndCloseGlowImageFor2and3()
+    {
+        if(cardAsset.ATK == 2)
+        {
+            glowImage.SetActive(true);
+        }
+        if(cardAsset.ATK == 3)
+            glowImage.SetActive(false);
     }
 
     void ReadFromCardAsset()

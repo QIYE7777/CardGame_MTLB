@@ -77,6 +77,7 @@ public class HandVisualManager : MonoBehaviour
             return;
         }
         Debug.Log("ÊÖÅÆÂú10ÕÅÁË");
+        DeckManager.Instance.cardInHandFull = true;
     }
 
     public void AddCardVisual()

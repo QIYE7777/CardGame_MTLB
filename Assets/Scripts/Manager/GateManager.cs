@@ -14,6 +14,7 @@ public class GateManager : Singleton<GateManager>
     private float temporaryFinalPoint;
     public float variationSpeed;
     public CardAsset[] arrayForFlush;
+    public CardAsset[] arrayExpect2;
     public Text[] visualInGateList;
     private int visualCount = 0;
     private bool isPressButton;
@@ -104,16 +105,29 @@ public class GateManager : Singleton<GateManager>
         List<CardAsset> list = new List<CardAsset>(arrayForFlush);
         list.AddRange(InPreOpenGateAsset);
         arrayForFlush = list.ToArray();
-
-        CardAsset.suit temporarySuit  = arrayForFlush[0].Suit;
-        int count = 0;
+        //NO.2 在结算阶段能够被视为任一花色
+        List<CardAsset> listExpect2 = new List<CardAsset>();
         for (int x = 0; x < arrayForFlush.Length; x++)
         {
-            if (arrayForFlush[x].Suit == temporarySuit)
-                count++;
+            if (arrayForFlush[x].ATK != 2)
+                listExpect2.Add(arrayForFlush[x]);
         }
-        if (count == arrayForFlush.Length)
-            return true;
+        arrayExpect2 = listExpect2.ToArray();
+
+        if (arrayExpect2.Length == 0) return true;
+
+        CardAsset.suit temporarySuit = arrayExpect2[0].Suit;
+        int count = 0;
+        for (int x = 0; x < arrayExpect2.Length; x++)
+        {
+            if (arrayExpect2[x].Suit == temporarySuit)
+                count++;
+            if (count == arrayExpect2.Length)
+            {
+                Debug.Log(count);
+                return true;
+            }
+        }
         return false;
     }
 

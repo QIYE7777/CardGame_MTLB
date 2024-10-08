@@ -60,10 +60,13 @@ public class EnemyManager : Singleton<EnemyManager>
             return;
         }
 
-        StartCoroutine(ClearGateText());
+        StartCoroutine(ClearEnemyText());
         foreach (CardAsset c in InPreBattleGateAsset)
         {
-            damage += c.ATK;
+            //NO.3 3在战斗和招募中视为9
+            if (c.ATK == 3)
+                damage += 9;
+            else damage += c.ATK;
         }
         InPreBattleGateAsset = new CardAsset[0];
         visualCount = 0;
@@ -151,11 +154,11 @@ public class EnemyManager : Singleton<EnemyManager>
 
         //把visualInGateList清空
         visualCount = 0;
-        StartCoroutine(ClearGateText());
+        StartCoroutine(ClearEnemyText());
 
         StartCoroutine(giveAllCardsBackIE());
     }
-    IEnumerator ClearGateText()
+    IEnumerator ClearEnemyText()
     {
         foreach (Text t in visualInEnemyPreList)
         {
