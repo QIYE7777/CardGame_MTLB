@@ -19,6 +19,12 @@ public class GateManager : Singleton<GateManager>
     private int visualCount = 0;
     private bool isPressButton;
 
+    public List<CardAsset> cardClubList = new List<CardAsset>();
+    public List<CardAsset> cardDiamondList = new List<CardAsset>();
+    public List<CardAsset> cardHeartsList = new List<CardAsset>();
+    public List<CardAsset> cardSpadeList = new List<CardAsset>();
+    public List<CardAsset> card4SuitList = new List<CardAsset>();
+
     //public event Action<CardAsset, bool> addCardFromGate;
     private void Update()
     {
@@ -35,8 +41,10 @@ public class GateManager : Singleton<GateManager>
         List<CardAsset> InPreOpenGateAssets = new List<CardAsset>(InPreOpenGateAsset);
         InPreOpenGateAssets.Add(c);
         InPreOpenGateAsset = InPreOpenGateAssets.ToArray();
+
         VisualInGate(c);
     }
+    
 
     public void giveAllCardsBack()
     {
@@ -76,11 +84,51 @@ public class GateManager : Singleton<GateManager>
     {
         finalPointUI.text = Mathf.RoundToInt(temporaryFinalPoint).ToString();
     }
+    void CheckNO4Effect(CardAsset c)
+    {
+        //NO.4 仅结算时生效，给你的手牌中与本牌同花色的牌额外+2点战力（不包括本牌）
+        if (c.Suit == CardAsset.suit.Club)
+            cardClubList.Add(c);
+        if (c.Suit == CardAsset.suit.Diamond)
+            cardDiamondList.Add(c);
+        if (c.Suit == CardAsset.suit.Hearts)
+            cardHeartsList.Add(c);
+        if (c.Suit == CardAsset.suit.Spade)
+            cardSpadeList.Add(c);
+        if (c.ATK == 4)
+            card4SuitList.Add(c);
+    }
     public void calculatePoint()
     {
+        foreach(CardAsset c in InPreOpenGateAsset)
+            CheckNO4Effect(c);
+
         //把visualInGateList清空
         visualCount = 0;
         StartCoroutine(ClearGateText());
+
+        //NO.4
+        if(card4SuitList.Count > 0 && TradeInManager.Instance.cardsNumberInTrade + GameManager.Instance.handVisualManger.cardNumberInHand == 0)
+        {
+            foreach(CardAsset c in card4SuitList)
+            {
+                switch (c.Suit)
+                {
+                    case CardAsset.suit.Club:
+                        finalPoint += (cardClubList.Count - 1) * 2;
+                        break;
+                    case CardAsset.suit.Diamond:
+                        finalPoint += (cardDiamondList.Count - 1) * 2;
+                        break;
+                    case CardAsset.suit.Hearts:
+                        finalPoint += (cardHeartsList.Count - 1) * 2;
+                        break;
+                    case CardAsset.suit.Spade:
+                        finalPoint += (cardSpadeList.Count - 1) * 2;
+                        break;
+                }
+            }
+        }
 
         finalPoint = CalculatePointTool.FinalPoint(InPreOpenGateAsset) + finalPoint;
         if (IsFlush() && TradeInManager.Instance.cardsNumberInTrade + GameManager.Instance.handVisualManger.cardNumberInHand == 0)//如果手牌加tradein里的牌为零的话(即向大门提交最后一组牌的时候)，再检查同花

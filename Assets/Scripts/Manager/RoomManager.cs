@@ -15,6 +15,8 @@ public class RoomManager : Singleton<RoomManager>
     public EnemyAsset[] enemyAssets_20;
     public EnemyAsset[] enemyAssets_25;
 
+    public event Action OpenGlowImageFor1;
+    public event Action CloseGlowImageFor1;
     private void Start()
     {
         if (GameManager.Instance.handVisualManger.cardNumberInHand <= 0 && RoomSwitcher.Instance.currentRoomIndex == 1)
@@ -53,11 +55,13 @@ public class RoomManager : Singleton<RoomManager>
         yield return new WaitForSeconds(1);
         battleArea.transform.DOMoveX(-11.5f, 1);
         recruitArea.transform.DOMoveX(0, 1);
+        OpenGlowImageFor1?.Invoke();
     }
 
     public void FromRecruitToNexrRoom()
     {
         Debug.Log("toNextLevel");
+        CloseGlowImageFor1?.Invoke();
         GameObject dontDestroy = GameObject.FindWithTag("DontDestroy");
         var roomSwitcher = dontDestroy.GetComponent<RoomSwitcher>();
         roomSwitcher.SwitchToNextLevel();

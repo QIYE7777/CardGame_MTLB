@@ -237,18 +237,19 @@ public class CardDrugAndReplace : MonoBehaviour
         {
             overlapTradeInArea = false;
             tradeInManager.glowFrame(false);
-            //overlapCard = null;
+            overlapCard = null;
         }
         if (other.CompareTag("GateArea"))
         {
             overlapGateArea = false;
             gateManager.glowFrame(false);
-            //overlapCard = null;
+            overlapCard = null;
         }
         if (other.CompareTag("EnemyArea"))
         {
             overlapEnemyArea = false;
             enemyManager.glowFrame(false);
+            overlapCard = null;
         }
     }
 }
