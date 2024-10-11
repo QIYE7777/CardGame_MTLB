@@ -949,7 +949,7 @@ MonoBehaviour:
   suit: {fileID: 8433521137523634606}
   descriptionComponment: {fileID: 2514062723669892805}
   glowImage: {fileID: 6320048866522938573}
-  hoverCardManage: {fileID: 0}
+  hoverCardManage: {fileID: 6979342884638243494}
 --- !u!114 &6246802417598331385
 MonoBehaviour:
   m_ObjectHideFlags: 0

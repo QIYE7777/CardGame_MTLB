@@ -134,16 +134,16 @@ public class CardDrugAndReplace : MonoBehaviour
         if (overlapCardParent.childCount <= 1)
         {
             transform?.SetParent(overlapCardParent);
-
-            transform.localPosition = new Vector3(0, 0, 0);
+            transform.DOLocalMove(new Vector3(0, 0, 0), 0.1f);
+            //transform.localPosition = new Vector3(0, 0, 0);
 
         }
 
         if (currentParent.childCount == 0)
         {
             overlapCard?.transform.SetParent(currentParent);
-
-            overlapCard.transform.localPosition = new Vector3(0, 0, 0);
+            overlapCard.transform.DOLocalMove(new Vector3(0, 0, 0), 0.1f);
+            //overlapCard.transform.localPosition = new Vector3(0, 0, 0);
 
         }
 

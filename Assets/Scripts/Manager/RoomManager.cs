@@ -48,14 +48,20 @@ public class RoomManager : Singleton<RoomManager>
 
     public void FromBattleToRecruit()
     {
+        Cursor.lockState = CursorLockMode.Locked; // 锁定鼠标位置
+        Cursor.visible = false;                   // 隐藏鼠标光标
         StartCoroutine(FromBattleToRecruitIE());
     }
     IEnumerator FromBattleToRecruitIE()
     {
-        yield return new WaitForSeconds(1);
+        GameManager.Instance.handVisualManger.NewCardDrugAndReplace.notDrugCard(true);
         battleArea.transform.DOMoveX(-11.5f, 1);
         recruitArea.transform.DOMoveX(0, 1);
         OpenGlowImageFor1?.Invoke();
+        yield return new WaitForSeconds(1);
+        GameManager.Instance.handVisualManger.NewCardDrugAndReplace.notDrugCard(false);
+        Cursor.lockState = CursorLockMode.None; // 解除鼠标锁定
+        Cursor.visible = true;                  // 显示鼠标光标
     }
 
     public void FromRecruitToNexrRoom()
