@@ -13,7 +13,7 @@ public class GameManager : Singleton<GameManager>
     public HandVisualManager handVisualManger;
     public GameObject dontDestroy;
 
-    public event Action DealDefaultCards;
+    public event Action<int> DealDefaultCards;
 
     public void DealDefaultCardsWithBreaks()
     {
@@ -28,7 +28,7 @@ public class GameManager : Singleton<GameManager>
 
         for (int i = 0; i<defaultNumberofCards; i++)
         {
-            DealDefaultCards?.Invoke();
+            DealDefaultCards?.Invoke(defaultNumberofCards);
             yield return new WaitForSeconds(0.5f);
         }
     }

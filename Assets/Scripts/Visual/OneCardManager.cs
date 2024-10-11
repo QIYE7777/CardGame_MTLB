@@ -14,15 +14,12 @@ public class OneCardManager : MonoBehaviour
     [Header("Other")]
     public RectTransform descriptionComponment;
     public GameObject glowImage;
+    public OneCardManager hoverCardManage;
 
     private static bool card1ShouldGlow =false;
     private void Awake()
     {
-        if (cardAsset != null)
-        {
-            ReadFromCardAsset();
-            RemoveDescription();
-        }
+
 
         RoomSwitcher.Instance.OpenandCloseGlowImageEvent += OpenAndCloseGlowImageFor234;
         RoomManager.Instance.OpenGlowImageFor1 += OpenGlowImageFor1;
@@ -30,6 +27,19 @@ public class OneCardManager : MonoBehaviour
     }
     private void Start()
     {
+        if (hoverCardManage != null)
+        {
+            hoverCardManage.cardAsset = cardAsset;
+            Debug.Log(cardAsset);
+        }
+
+        if (cardAsset != null)
+        {
+            ReadFromCardAsset();
+            RemoveDescription();
+        }
+
+        if (glowImage == null) return;
         if (cardAsset.ATK == 3) glowImage.SetActive(true);
         if(card1ShouldGlow && cardAsset.ATK == 1) glowImage.SetActive(true);
     }

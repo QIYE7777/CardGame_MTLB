@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using UnityEngine.EventSystems;
+using System;
 
 public class HandVisualManager : MonoBehaviour
 {
@@ -27,6 +28,12 @@ public class HandVisualManager : MonoBehaviour
     public  CardDrugAndReplace NewCardDrugAndReplace;
     public int canAddCardsInHand;
     public int cardNumberInGate;
+    public List<GameObject> newCardsList;
+
+    public int count = 0;
+
+    public static event Action<bool> allCardsCannotHover;
+
     private void Start()
     {
         slots = sameDistanceChildren.children;
@@ -34,10 +41,12 @@ public class HandVisualManager : MonoBehaviour
         cardNumber = cardAsset.Length;
         cardNumberInHand = 0;
 
-        DeckManager.Instance.DealingCard += AddCard;
+        DeckManager.Instance.DealingCard += AddCardFromDeck;
         //TradeInManager.Instance.addCardFromTrade += AddCardFromTrade;
         //GateManager.Instance.addCardFromGate += AddCardFromGate;
         //EnemyManager.Instance.addCardFromPreBattle += AddCardFromEnemyPreBattle;
+
+        newCardsList = new List<GameObject>();
     }
     private void Update()
     {
@@ -99,6 +108,10 @@ public class HandVisualManager : MonoBehaviour
         NewCardDrugAndReplace = newCard.GetComponent<CardDrugAndReplace>();
         NewCardDrugAndReplace.notDrugCard(true);
 
+        allCardsCannotHover?.Invoke(false);
+        newCard.GetComponent<HoverPreview>().canHover = false;
+        newCardsList.Add(newCard);
+
         MoveToMiddle();
     }
 
@@ -135,20 +148,44 @@ public class HandVisualManager : MonoBehaviour
         if (r.GetComponent<CardDrugAndReplace>().overlapEnemyArea)
             EnemyManager.Instance.AddCardInPreBattle(lastRemoveCardAsset);
 
+        
+            r.SetActive(false);
         if (cardNumberInHand > 1)
         {
-            Slot.transform.DOMoveX(Slot.transform.position.x + slotMoveDistanceX / 2, 0.5f);
+            //Slot.transform.position = new Vector3( Slot.transform.position.x + slotMoveDistanceX / 2, Slot.transform.position.y, Slot.transform.position.z);
+            Slot.transform.DOMoveX(Slot.transform.position.x + slotMoveDistanceX / 2, 0.05f);
         }
-
         List<CardAsset> cardAssets = new List<CardAsset>(cardAsset);
         cardAssets.Remove(r.GetComponent<OneCardManager>().cardAsset);
         cardAsset = cardAssets.ToArray();
 
         Destroy(r);
+        /*Slot.transform.DOMoveX(Slot.transform.position.x + slotMoveDistanceX / 2, 0.5f).OnComplete(()=> 
+        {
+            List<CardAsset> cardAssets = new List<CardAsset>(cardAsset);
+            cardAssets.Remove(r.GetComponent<OneCardManager>().cardAsset);
+            cardAsset = cardAssets.ToArray();
 
-        //ReplenishGap();
+            Destroy(r);
+        });*/
+
+
+
+        //StartCoroutine(RemoveCardIE(r));
+
+        //ReplenishGap();    
     }
+    IEnumerator RemoveCardIE(GameObject r)
+    {
 
+        r.SetActive(false);
+        yield return new WaitForSeconds(0.5f);
+        List<CardAsset> cardAssets = new List<CardAsset>(cardAsset);
+        cardAssets.Remove(r.GetComponent<OneCardManager>().cardAsset);
+        cardAsset = cardAssets.ToArray();
+
+        Destroy(r);
+    }
     void ReplenishGap()
     {
         StartCoroutine(ReplenishGapIE());
@@ -174,31 +211,77 @@ public class HandVisualManager : MonoBehaviour
         yield return null;
     }
 
-    public void AddCardFromTrade(CardAsset c, bool x)
+    //抽牌的时候不会悬浮
+    public void AddCardFromTrade(CardAsset c, bool x,int cardCount)
     {
+        count++;
+
         cardsFromTrade = x;
         AddCard(c);
         cardsFromTrade = false;
-    }
 
-    public void AddCardFromGate(CardAsset c, bool x)
+       if (count == cardCount)
+            StartCoroutine(AddCardFromTradeIE(cardCount));
+    }
+    IEnumerator AddCardFromTradeIE(int i) 
+    { 
+        yield return new WaitForSeconds(0.2f * i);
+        allCardsCannotHover?.Invoke(true);
+        count = 0;
+    }
+    public void AddCardFromGate(CardAsset c, bool x, int cardCount)
     {
+        count++;
+
         cardsFromGate = x;
         AddCard(c);
         cardsFromGate = false;
-        Debug.Log(cardsFromGate);
+
+        if (count == cardCount)
+            StartCoroutine(AddCardFromGateIE(cardCount));
     }
-    public void AddCardFromEnemyPreBattle(CardAsset c, bool x)
+    IEnumerator AddCardFromGateIE(int i)
     {
+        yield return new WaitForSeconds(0.2f * i);
+        allCardsCannotHover?.Invoke(true);
+        count = 0;
+    }
+    public void AddCardFromEnemyPreBattle(CardAsset c, bool x, int cardCount)
+    {
+        count++;
+
         cardsFromEnemy = x;
         AddCard(c);
         cardsFromEnemy = false;
+
+        if (count == cardCount)
+            StartCoroutine(AddCardFromEnemyPreBattleIE(cardCount));
+    }
+    IEnumerator AddCardFromEnemyPreBattleIE(int i)
+    {
+        yield return new WaitForSeconds(0.2f * i);
+        allCardsCannotHover?.Invoke(true);
+        count = 0;
+    }
+    public void AddCardFromDeck(CardAsset c, int cardCount)
+    {
+        count++;
+        AddCard(c);
+        Debug.Log("AddCardFromDeck");
+        if (count == cardCount)
+            StartCoroutine(AddCardFromDeckIE(cardCount));
+    }
+    IEnumerator AddCardFromDeckIE(int i)
+    {
+        yield return new WaitForSeconds(0.2f * i);
+        allCardsCannotHover?.Invoke(true);
+        count = 0;
     }
 
     public void RandomLoseCard()
     {
         if (cardNumberInHand == 0) return;
-        int ranfomIndex = Random.Range(0, cardAsset.Length - 1);
+        int ranfomIndex = UnityEngine. Random.Range(0, cardAsset.Length - 1);
         GameObject randomCard = slots[ranfomIndex].GetChild(0).gameObject;
 
         List<CardAsset> cardAssets = new List<CardAsset>(cardAsset);
@@ -219,6 +302,7 @@ public class HandVisualManager : MonoBehaviour
         }
         Destroy(r);
     }
+
     /* 这个方法会改变 更改过位置的手牌的顺序
         void ReplenishGap()
     {

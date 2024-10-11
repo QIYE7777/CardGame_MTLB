@@ -50,6 +50,7 @@ public class TradeInManager : Singleton<TradeInManager>
     }
     public void glowFrame(bool x)
     {
+        if (glowImage == null) return;
         glowImage.SetActive(x);
     }
 
@@ -90,12 +91,15 @@ public class TradeInManager : Singleton<TradeInManager>
 
     IEnumerator giveAllCardsBackIE()
     {
+        int addCardCount = 0;
+        foreach (CardAsset i in InPretradecardAsset)
+        { addCardCount++; }
         foreach (CardAsset i in InPretradecardAsset)
         {
             if (i.ATK == 1)
                 oneCount--;
-            if (oneCount<=0) DiceManager.Instance.glowFrame(false);
-            GameManager.Instance.handVisualManger. AddCardFromTrade(i,true);
+            if (oneCount <= 0) DiceManager.Instance.glowFrame(false);
+            GameManager.Instance.handVisualManger.AddCardFromTrade(i, true, addCardCount);
             yield return new WaitForSeconds(0.5f);
             List<CardAsset> InPretradecardAssets = new List<CardAsset>(InPretradecardAsset);
             InPretradecardAssets.Remove(i);

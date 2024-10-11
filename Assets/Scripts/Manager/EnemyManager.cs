@@ -169,9 +169,12 @@ public class EnemyManager : Singleton<EnemyManager>
     }
     IEnumerator giveAllCardsBackIE()
     {
+        int addCardCount = 0;
+        foreach (CardAsset i in InPreBattleGateAsset)
+        { addCardCount++; }
         foreach (CardAsset i in InPreBattleGateAsset)
         {
-            GameManager.Instance.handVisualManger.AddCardFromEnemyPreBattle(i, true);
+            GameManager.Instance.handVisualManger.AddCardFromEnemyPreBattle(i, true, addCardCount);
             yield return new WaitForSeconds(0.5f);
             List<CardAsset> InPretradecardAssets = new List<CardAsset>(InPreBattleGateAsset);
             InPretradecardAssets.Remove(i);

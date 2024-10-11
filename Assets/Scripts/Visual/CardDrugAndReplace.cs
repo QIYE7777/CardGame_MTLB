@@ -22,6 +22,7 @@ public class CardDrugAndReplace : MonoBehaviour
 
     private Transform currentParent ;
     private Transform overlapCardParent;
+    private HoverPreview hoverPreview;
 
     private GateManager gateManager;
     public EnemyManager enemyManager;
@@ -32,6 +33,12 @@ public class CardDrugAndReplace : MonoBehaviour
     // 标识是否正在执行动画
     private static bool isAnimating = false;
 
+    public static event Action<bool> cannotHover;
+
+    private void Start()
+    {
+        hoverPreview = gameObject.GetComponent<HoverPreview>();
+    }
     private void OnMouseDown()
     {
         //Debug.Log(isAnimating);
@@ -39,7 +46,9 @@ public class CardDrugAndReplace : MonoBehaviour
         // 检查是否正在执行动画，正在执行动画时不允许操作
         if (isAnimating) return;
 
-        visualCard.transform.Translate(0, 0.4f, -0.2f);
+        //visualCard.transform.Translate(0, 0.4f, -0.2f);
+
+        cannotHover?.Invoke(false);
 
         dragging = true;
         zDisplacement = transform.position.z - Camera.main.transform.position.z;
@@ -70,11 +79,13 @@ public class CardDrugAndReplace : MonoBehaviour
         if (dragging)
             dragging = false;
 
+        cannotHover?.Invoke(true);
+
         tradeInManager?.glowFrame(false);
         gateManager?.glowFrame(false);
         enemyManager?.glowFrame(false);
 
-        visualCard.transform.Translate(0, -0.4f, 0.2f);
+        //visualCard.transform.Translate(0, -0.4f, 0.2f);
 
         if (overlapOtherCard)
         {
@@ -82,20 +93,6 @@ public class CardDrugAndReplace : MonoBehaviour
 
             ReplaceCardsByParent();
 
-            /*
-            // 使用 DOTween 将当前卡牌和重叠卡牌移动到彼此的位置
-            Sequence swapSequence = DOTween.Sequence();
-            swapSequence.Append(transform.DOMove(overlapCardPosition, 0.2f));
-            swapSequence.Join(overlapCard.transform.DOMove(initialPosition, 0.2f));
-
-            // 在动画完成后，恢复交互状态
-            swapSequence.OnComplete(() =>
-            {
-                // 交换完毕后恢复状态
-                isAnimating = false;
-                overlapOtherCard = false;
-                overlapCard = null;
-            });*/
         }
         else if(overlapTradeInArea|| overlapGateArea )
         {
@@ -129,8 +126,10 @@ public class CardDrugAndReplace : MonoBehaviour
 
     void ReplaceCardsByParent()
     {
+        if (!overlapOtherCard) return; ;
         //slotsInHand = GameManager.Instance.handVisualManger.slots;
         currentParent = transform.parent;
+        if (overlapCard == null) return;
         overlapCardParent = overlapCard.transform.parent;
         if (overlapCardParent.childCount <= 1)
         {
@@ -236,20 +235,20 @@ public class CardDrugAndReplace : MonoBehaviour
         if (other.CompareTag("TradeInArea"))
         {
             overlapTradeInArea = false;
-            tradeInManager.glowFrame(false);
-            overlapCard = null;
+            tradeInManager?.glowFrame(false);
+            //overlapCard = null;
         }
         if (other.CompareTag("GateArea"))
         {
             overlapGateArea = false;
-            gateManager.glowFrame(false);
-            overlapCard = null;
+            gateManager?.glowFrame(false);
+            //overlapCard = null;
         }
         if (other.CompareTag("EnemyArea"))
         {
             overlapEnemyArea = false;
-            enemyManager.glowFrame(false);
-            overlapCard = null;
+            enemyManager?.glowFrame(false);
+            //overlapCard = null;
         }
     }
 }

@@ -5,7 +5,7 @@ using System;
 
 public class DeckManager : Singleton<DeckManager>
 {
-    public event Action<CardAsset> DealingCard;
+    public event Action<CardAsset,int> DealingCard;
 
     public CardAsset[] deck;
 
@@ -36,14 +36,14 @@ public class DeckManager : Singleton<DeckManager>
             array[j] = temp;
         }
     }
-    public void DealCard()
+    public void DealCard(int dealCardCount)
     {
         if (deck.Length < 1)
         {
             Debug.Log("ÅÆ¿â±»³é¿ÕÁË");
             return;
         }
-        DealingCard?.Invoke(deck[0]);
+        DealingCard?.Invoke(deck[0], dealCardCount);
         if (cardInHandFull)
         {
             cardInHandFull = false;

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 2_Hearts
   m_EditorClassIdentifier: 
   Description: The suit of this card can be regarded as any suit
-  CardImage: {fileID: 21300000, guid: 289db146db3ab05498c8d8d64d1826d7, type: 3}
+  CardImage: {fileID: 21300000, guid: 675b79607528f3d419bd1d669fefc5ac, type: 3}
   ATK: 2
   SuitIcon: {fileID: -738880240, guid: 8c8902acab948cd4d9a581d97333e10e, type: 3}
   Suit: 2

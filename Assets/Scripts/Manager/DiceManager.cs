@@ -86,7 +86,7 @@ public class DiceManager : Singleton<DiceManager>
         {
             for (int i = 0; i < totalDiceValue; i++)
             {
-                DeckManager.Instance.DealCard();
+                DeckManager.Instance.DealCard(totalDiceValue);
                 yield return new WaitForSeconds(0.5f);
             }
             RoomManager.Instance.nextLevelButton.SetActive(true);
@@ -95,7 +95,7 @@ public class DiceManager : Singleton<DiceManager>
         {
             for (int i = 0; i < tamporaryCanAddCardsInHand + 1; i++)
             {
-                DeckManager.Instance.DealCard();
+                DeckManager.Instance.DealCard(tamporaryCanAddCardsInHand + 1);
                 yield return new WaitForSeconds(0.5f);
             }
             RoomManager.Instance.nextLevelButton.SetActive(true);

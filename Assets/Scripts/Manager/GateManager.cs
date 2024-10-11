@@ -24,7 +24,9 @@ public class GateManager : Singleton<GateManager>
     public List<CardAsset> cardHeartsList = new List<CardAsset>();
     public List<CardAsset> cardSpadeList = new List<CardAsset>();
     public List<CardAsset> card4SuitList = new List<CardAsset>();
+    public List<CardAsset> card2SuitList = new List<CardAsset>();
 
+    private bool calculateEnd = false;
     //public event Action<CardAsset, bool> addCardFromGate;
     private void Update()
     {
@@ -69,9 +71,12 @@ public class GateManager : Singleton<GateManager>
     }
     IEnumerator giveAllCardsBackIE()
     {
+        int addCardCount = 0;
+        foreach (CardAsset i in InPreOpenGateAsset)
+        {  addCardCount++; }
         foreach (CardAsset i in InPreOpenGateAsset)
         {
-            GameManager.Instance.handVisualManger.AddCardFromGate(i, true);
+            GameManager.Instance.handVisualManger.AddCardFromGate(i, true, addCardCount);
             yield return new WaitForSeconds(0.5f);
             List<CardAsset> InPretradecardAssets = new List<CardAsset>(InPreOpenGateAsset);
             InPretradecardAssets.Remove(i);
@@ -97,9 +102,12 @@ public class GateManager : Singleton<GateManager>
             cardSpadeList.Add(c);
         if (c.ATK == 4)
             card4SuitList.Add(c);
+        if (c.ATK == 2)
+            card2SuitList.Add(c);
     }
     public void calculatePoint()
     {
+        if (calculateEnd) return;
         foreach(CardAsset c in InPreOpenGateAsset)
             CheckNO4Effect(c);
 
@@ -110,22 +118,69 @@ public class GateManager : Singleton<GateManager>
         //NO.4
         if(card4SuitList.Count > 0 && TradeInManager.Instance.cardsNumberInTrade + GameManager.Instance.handVisualManger.cardNumberInHand == 0)
         {
+            int count = 0;
             foreach(CardAsset c in card4SuitList)
             {
-                switch (c.Suit)
+                count++;
+                if(card2SuitList.Count == 0)
                 {
-                    case CardAsset.suit.Club:
-                        finalPoint += (cardClubList.Count - 1) * 2;
-                        break;
-                    case CardAsset.suit.Diamond:
-                        finalPoint += (cardDiamondList.Count - 1) * 2;
-                        break;
-                    case CardAsset.suit.Hearts:
-                        finalPoint += (cardHeartsList.Count - 1) * 2;
-                        break;
-                    case CardAsset.suit.Spade:
-                        finalPoint += (cardSpadeList.Count - 1) * 2;
-                        break;
+                    switch (c.Suit)
+                    {
+                        case CardAsset.suit.Club:
+                            finalPoint += (cardClubList.Count - 1) * 2;
+                            break;
+                        case CardAsset.suit.Diamond:
+                            finalPoint += (cardDiamondList.Count - 1) * 2;
+                            break;
+                        case CardAsset.suit.Hearts:
+                            finalPoint += (cardHeartsList.Count - 1) * 2;
+                            break;
+                        case CardAsset.suit.Spade:
+                            finalPoint += (cardSpadeList.Count - 1) * 2;
+                            break;
+                    }
+                }
+                else
+                {
+                    switch (c.Suit)
+                    {
+                        case CardAsset.suit.Club:
+                            finalPoint += (cardClubList.Count - 1) * 2;
+                            if (count > 1) return;
+                            foreach (CardAsset x in card2SuitList)
+                            {
+                                if(x.Suit != c.Suit)
+                                    finalPoint += 2;
+                            } 
+                            break;
+                        case CardAsset.suit.Diamond:
+                            finalPoint += (cardDiamondList.Count - 1) * 2;
+                            if (count > 1) return;
+                            foreach (CardAsset x in card2SuitList)
+                            {
+                                if (x.Suit != c.Suit)
+                                    finalPoint += 2;
+                            }
+                            break;
+                        case CardAsset.suit.Hearts:
+                            finalPoint += (cardHeartsList.Count - 1) * 2;
+                            if (count > 1) return;
+                            foreach (CardAsset x in card2SuitList)
+                            {
+                                if (x.Suit != c.Suit)
+                                    finalPoint += 2;
+                            }
+                            break;
+                        case CardAsset.suit.Spade:
+                            finalPoint += (cardSpadeList.Count - 1) * 2;
+                            if (count > 1) return;
+                            foreach (CardAsset x in card2SuitList)
+                            {
+                                if (x.Suit != c.Suit)
+                                    finalPoint += 2;
+                            }
+                            break;
+                    }
                 }
             }
         }
@@ -135,8 +190,10 @@ public class GateManager : Singleton<GateManager>
         {
             finalPoint = finalPoint * 2;
         }
+        
         //Çå¿ÕInPreOpenGateAssetÊý×é
         InPreOpenGateAsset = new CardAsset[0];
+        if (TradeInManager.Instance.cardsNumberInTrade + GameManager.Instance.handVisualManger.cardNumberInHand <= 0) calculateEnd = true;
     }
     void CheckATKPoint()
     {
