@@ -19,11 +19,10 @@ public class OneCardManager : MonoBehaviour
     private static bool card1ShouldGlow =false;
     private void Awake()
     {
-
-
         RoomSwitcher.Instance.OpenandCloseGlowImageEvent += OpenAndCloseGlowImageFor234;
         RoomManager.Instance.OpenGlowImageFor1 += OpenGlowImageFor1;
         RoomManager.Instance.CloseGlowImageFor1 += CloseGlowImageFor1;
+        GameManager.ClearLastGameData += ClearLastGameData;
     }
     private void Start()
     {
@@ -98,5 +97,9 @@ public class OneCardManager : MonoBehaviour
         cardAsset = c;
         ReadFromCardAsset();
         RemoveDescription();
+    }
+    public void ClearLastGameData()//÷ÿ÷√no.1µƒglowimage
+    {
+        card1ShouldGlow = false;
     }
 }

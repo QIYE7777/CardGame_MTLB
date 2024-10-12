@@ -14,7 +14,7 @@ public class GameManager : Singleton<GameManager>
     public GameObject dontDestroy;
 
     public event Action<int> DealDefaultCards;
-
+    public static event Action ClearLastGameData;
     public void DealDefaultCardsWithBreaks()
     {
         StartCoroutine(DealDefaultCardsWithBreaksIE());
@@ -55,6 +55,7 @@ public class GameManager : Singleton<GameManager>
     public void Retreat()
     {
         RoomSwitcher.Instance.BackToUI();
+        ClearLastGameData?.Invoke();
         Destroy(dontDestroy);
     }
 }
